@@ -2,7 +2,7 @@
 # See also LICENSE.txt
 # $Id$
 
-from setuptools import setup
+from setuptools import setup, find_packages
 import os
 
 version = '1.0dev'
