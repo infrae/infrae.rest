@@ -37,8 +37,8 @@ class RESTGrokker(martian.ClassGrokker):
                 method_defined = True
         if not method_defined:
             raise GrokError(
-                "REST component %s doesn't define any REST method" % (
-                    factory.__name__,))
+                "REST component %s doesn't define any REST method" % (name,),
+                factory)
 
         adapts = (context, IRESTLayer)
         config.action(

@@ -75,5 +75,8 @@ class RESTNamespace(view):
                 (self.context, self.request), name=name)
             if view is None:
                 raise NotFound(name)
+            # Set view parent/name for security
+            view.__name__ = name
+            view.__parent__ = self.context
             return view
         return self.context

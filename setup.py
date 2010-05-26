@@ -7,6 +7,11 @@ import os
 
 version = '1.0dev'
 
+tests_require = [
+    'infrae.wsgi [test]',
+    ]
+
+
 setup(name='infrae.rest',
       version=version,
       description="Define a REST API to access and manage Silva content",
@@ -38,4 +43,6 @@ setup(name='infrae.rest',
         'zope.publisher',
         'zope.traversing',
         ],
+      tests_require = tests_require,
+      extras_require = {'test': tests_require},
       )
