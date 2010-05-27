@@ -7,7 +7,7 @@
   Now, if we have a folder we can use our REST component:
 
     >>> root = getRootFolder()
-    >>> root.manage_addProduct['OFS'].manage_addFolder('folder', 'Folder')
+    >>> _ = root.manage_addProduct['OFS'].manage_addFolder('folder', 'Folder')
     >>> print http('GET /folder/++rest++testsimple HTTP/1.0')
     HTTP/1.0 200 OK
     Content-Length: 7
@@ -42,6 +42,14 @@
        ...
     MethodNotAllowed: HEAD
 
+  If you test the view on a different object than a folder, it won't
+  work as it is registered only for folders:
+
+    >>> _ = root.manage_addProduct['OFS'].manage_addImage('image', 'Image')
+    >>> print http('GET /image/++rest++testsimple HTTP/1.0')
+    Traceback (most recent call last):
+      ...
+    NotFound: testsimple
 
 """
 
