@@ -36,9 +36,8 @@
     {"identifier": "42"}
 
     >>> print http('HEAD /folder/++rest++testjson HTTP/1.0')
-    HTTP/1.0 200 OK
+    HTTP/1.0 204 No Content
     Content-Length: 0
-    Content-Type: text/html;charset=utf-8
     <BLANKLINE>
     <BLANKLINE>
 

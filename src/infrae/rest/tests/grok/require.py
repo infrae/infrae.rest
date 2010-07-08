@@ -14,7 +14,6 @@
     >>> print http('GET /folder/++rest++secret HTTP/1.0')
     HTTP/1.0 401 Unauthorized
     Content-Length: 0
-    Content-Type: text/html;charset=utf-8
     Www-Authenticate: basic realm="Zope"
     <BLANKLINE>
 
