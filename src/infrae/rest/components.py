@@ -25,7 +25,10 @@ class REST(object):
     def __init__(self, context, request):
         self.context = context
         self.request = request
-        self.response = request.response
+
+    @property
+    def response(self):
+        return self.request.response
 
     def browserDefault(self, request):
         """Render the component using a method called the same way
