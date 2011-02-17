@@ -6,7 +6,6 @@ from App.class_init import InitializeClass as initializeClass
 from Products.Five.security import protectName
 
 from five import grok
-from martian.error import GrokError
 from zope import interface, component
 import martian
 
@@ -31,14 +30,6 @@ class RESTGrokker(martian.ClassGrokker):
         """
         if permission is None:
             permission = 'zope.Public'
-        method_defined = False
-        for method in ALLOWED_REST_METHODS:
-            if hasattr(factory, method):
-                method_defined = True
-        if not method_defined:
-            raise GrokError(
-                "REST component %s doesn't define any REST method" % (name,),
-                factory)
 
         adapts = (context, IRESTLayer)
         config.action(
