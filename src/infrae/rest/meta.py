@@ -6,22 +6,25 @@ from App.class_init import InitializeClass as initializeClass
 from Products.Five.security import protectName
 
 from five import grok
-from zope import interface, component
+from zope.interface import Interface
+from zope.component import adaptedBy, provideAdapter
 import martian
 
 from infrae.rest.components import REST, ALLOWED_REST_METHODS
-from infrae.rest.interfaces import IRESTLayer
-
+from infrae.rest.interfaces import IRESTComponent
 
 def default_view_name(factory, module=None, **data):
     return factory.__name__.lower()
+
+def default_context(*stuff, **things):
+    return None
 
 
 class RESTGrokker(martian.ClassGrokker):
     """Grok REST views.
     """
     martian.component(REST)
-    martian.directive(grok.context)
+    martian.directive(grok.context, get_default=default_context)
     martian.directive(grok.name, get_default=default_view_name)
     martian.directive(grok.require, name='permission')
 
@@ -31,11 +34,14 @@ class RESTGrokker(martian.ClassGrokker):
         if permission is None:
             permission = 'zope.Public'
 
-        adapts = (context, IRESTLayer)
+        adapts = adaptedBy(factory)
+        if adapts is None:
+            adapts = (Interface, context)
+
         config.action(
-            discriminator=('adapter', adapts, interface.Interface, name),
-            callable=component.provideAdapter,
-            args=(factory, adapts, interface.Interface, name))
+            discriminator=('adapter', adapts, IRESTComponent, name),
+            callable=provideAdapter,
+            args=(factory, adapts, IRESTComponent, name))
 
         for method in ALLOWED_REST_METHODS:
             if hasattr(factory, method):

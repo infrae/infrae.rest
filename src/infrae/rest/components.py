@@ -3,24 +3,43 @@
 # $Id$
 
 from five import grok
-from zExceptions import NotFound
-from zope import component
-from zope.publisher.browser import applySkin
-from zope.publisher.interfaces.browser import IBrowserPublisher
+from zope.component import getGlobalSiteManager
+from zope.interface import Interface, providedBy
+from zope.interface.interfaces import IInterface
 from zope.traversing.namespace import view
 
-from infrae.rest.interfaces import MethodNotAllowed, IRESTLayer
+from zExceptions import NotFound
+
+from infrae.rest.interfaces import MethodNotAllowed, IRESTComponent
 
 import simplejson
 
 ALLOWED_REST_METHODS = ('GET', 'POST', 'HEAD', 'PUT',)
 
 
+def queryREST(specs, args, name=u''):
+    """Query a REST component.
+    """
+
+    def specOf(obj):
+        if IInterface.providedBy(obj):
+            return obj
+        return providedBy(obj)
+
+    sm = getGlobalSiteManager()
+    factory = sm.adapters.lookup(map(specOf, specs), IRESTComponent, name)
+    if factory is not None:
+        result = factory(*args)
+        if result is not None and IRESTComponent.providedBy(result):
+            return result
+    return None
+
+
 class REST(object):
     """A base REST component
     """
     grok.baseclass()
-    grok.implements(IBrowserPublisher)
+    grok.implements(IRESTComponent)
 
     def __init__(self, context, request):
         self.context = context
@@ -41,11 +60,20 @@ class REST(object):
 
     def publishTraverse(self, request, name):
         """You can traverse to a method called the same way that the
-        HTTP method name.
+        HTTP method name, or a sub view
         """
         if name in ALLOWED_REST_METHODS and name == request.method:
             if hasattr(self, name):
                 return getattr(self, name)
+        view = queryREST(
+            (self, self.context),
+            (self.context, request),
+            name=name)
+        if view is not None:
+            # Set parenting information
+            view.__name__ = name
+            view.__parent__ = self
+            return view
         raise NotFound(name)
 
     def json_response(self, result):
@@ -72,10 +100,11 @@ class RESTNamespace(view):
 
     def traverse(self, name, ignored):
         self.request.shiftNameToApplication()
-        applySkin(self.request, IRESTLayer)
         if name:
-            view = component.queryMultiAdapter(
-                (self.context, self.request), name=name)
+            view = queryREST(
+                (Interface, self.context),
+                (self.context, self.request),
+                name=name)
             if view is None:
                 raise NotFound(name)
             # Set view parent/name for security

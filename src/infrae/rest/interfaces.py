@@ -2,11 +2,12 @@
 # See also LICENSE.txt
 # $Id$
 
-from zope.publisher.interfaces.http import IHTTPRequest
+
+from zope.publisher.interfaces.browser import IBrowserPublisher
 
 
-class IRESTLayer(IHTTPRequest):
-    """To this layer are registered the REST components.
+class IRESTComponent(IBrowserPublisher):
+    """A REST component
     """
 
 
