@@ -2,5 +2,7 @@
 # See also LICENSE.txt
 # $Id$
 
-from infrae.rest.components import REST
+from infrae.rest.components import REST, lookupREST
+
+__all__ = ['REST', 'lookupREST']
 

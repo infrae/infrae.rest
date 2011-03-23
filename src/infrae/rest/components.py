@@ -17,10 +17,9 @@ import simplejson
 ALLOWED_REST_METHODS = ('GET', 'POST', 'HEAD', 'PUT',)
 
 
-def queryREST(specs, args, name=u''):
-    """Query a REST component.
+def queryRESTComponent(specs, args, name=u''):
+    """Query the ZCA for a REST component.
     """
-
     def specOf(obj):
         if IInterface.providedBy(obj):
             return obj
@@ -33,6 +32,21 @@ def queryREST(specs, args, name=u''):
         if result is not None and IRESTComponent.providedBy(result):
             return result
     return None
+
+
+def lookupREST(context, request, name):
+    """Lookup a REST component called name on the given context / request.
+    """
+    view = queryRESTComponent(
+        (Interface, context),
+        (context, request),
+        name=name)
+    if view is None:
+        raise NotFound(name)
+    # Set view parent/name for security
+    view.__name__ = name
+    view.__parent__ = context
+    return view
 
 
 class REST(object):
@@ -65,7 +79,7 @@ class REST(object):
         if name in ALLOWED_REST_METHODS and name == request.method:
             if hasattr(self, name):
                 return getattr(self, name)
-        view = queryREST(
+        view = queryRESTComponent(
             (self, self.context),
             (self.context, request),
             name=name)
@@ -101,14 +115,5 @@ class RESTNamespace(view):
     def traverse(self, name, ignored):
         self.request.shiftNameToApplication()
         if name:
-            view = queryREST(
-                (Interface, self.context),
-                (self.context, self.request),
-                name=name)
-            if view is None:
-                raise NotFound(name)
-            # Set view parent/name for security
-            view.__name__ = name
-            view.__parent__ = self.context
-            return view
+            return lookupREST(self.context, self.request, name)
         return self.context
