@@ -4,9 +4,10 @@
 
 
 from zope.publisher.interfaces.browser import IBrowserPublisher
+from zope.location.interfaces import ILocation
 
 
-class IRESTComponent(IBrowserPublisher):
+class IRESTComponent(IBrowserPublisher, ILocation):
     """A REST component
     """
 
