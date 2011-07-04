@@ -12,7 +12,7 @@ from zExceptions import NotFound
 
 from infrae.rest.interfaces import MethodNotAllowed, IRESTComponent
 
-import simplejson
+import json
 
 ALLOWED_REST_METHODS = ('GET', 'POST', 'HEAD', 'PUT',)
 
@@ -94,7 +94,7 @@ class REST(object):
         """Encode a result as a JSON response.
         """
         self.response.setHeader('Content-Type', 'application/json')
-        return simplejson.dumps(result)
+        return json.dumps(result)
 
 
 class MethodNotAllowedView(grok.View):
