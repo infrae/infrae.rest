@@ -6,11 +6,13 @@ from App.class_init import InitializeClass as initializeClass
 from Products.Five.security import protectName
 
 from five import grok
+from grokcore.view.meta.views import TemplateGrokker
 from zope.interface import Interface
 from zope.component import adaptedBy, provideAdapter
 import martian
 
 from infrae.rest.components import REST, ALLOWED_REST_METHODS
+from infrae.rest.components import RESTWithTemplate
 from infrae.rest.interfaces import IRESTComponent
 
 def default_view_name(factory, module=None, **data):
@@ -55,3 +57,14 @@ class RESTGrokker(martian.ClassGrokker):
             callable = initializeClass,
             args = (factory,))
         return True
+
+
+class RESTWithTemplateGrokker(TemplateGrokker):
+    martian.component(RESTWithTemplate)
+
+    def has_render(self, factory):
+        return False
+
+    def has_no_render(self, factory):
+        return False
+

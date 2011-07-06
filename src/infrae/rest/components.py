@@ -97,6 +97,18 @@ class REST(object):
         return json.dumps(result)
 
 
+class RESTWithTemplate(REST):
+    template = None
+
+    def default_namespace(self):
+        return {'rest': self,
+                'context': self.context,
+                'request': self.request}
+
+    def namespace(self):
+        return {}
+
+
 class MethodNotAllowedView(grok.View):
     grok.context(MethodNotAllowed)
     grok.name('error.html')
