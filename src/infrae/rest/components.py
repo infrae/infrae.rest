@@ -7,9 +7,11 @@ from zope.component import getGlobalSiteManager
 from zope.interface import Interface, providedBy
 from zope.interface.interfaces import IInterface
 from zope.traversing.namespace import view
+from zope.event import notify
 
 from zExceptions import NotFound
 
+from infrae.rest.interfaces import RESTMethodPublishedEvent
 from infrae.rest.interfaces import MethodNotAllowed, IRESTComponent
 
 import json
@@ -78,6 +80,7 @@ class REST(object):
         """
         if name in ALLOWED_REST_METHODS and name == request.method:
             if hasattr(self, name):
+                notify(RESTMethodPublishedEvent(self, name))
                 return getattr(self, name)
         view = queryRESTComponent(
             (self, self.context),

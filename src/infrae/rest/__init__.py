@@ -3,6 +3,8 @@
 # $Id$
 
 from infrae.rest.components import REST, RESTWithTemplate, lookupREST
+from infrae.rest.interfaces import IRESTMethodPublishedEvent
 
-__all__ = ['REST', 'lookupREST', 'RESTWithTemplate']
+__all__ = [
+    'REST', 'lookupREST', 'RESTWithTemplate', 'IRESTMethodPublishedEvent']
 
