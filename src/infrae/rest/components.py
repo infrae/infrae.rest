@@ -3,12 +3,14 @@
 # $Id$
 
 from five import grok
-from zope.component import getGlobalSiteManager
+from zope.component import getGlobalSiteManager, getMultiAdapter
+from zope.event import notify
 from zope.interface import Interface, providedBy
 from zope.interface.interfaces import IInterface
+from zope.traversing.browser.interfaces import IAbsoluteURL
 from zope.traversing.namespace import view
-from zope.event import notify
 
+from Products.Five import BrowserView
 from zExceptions import NotFound
 
 from infrae.rest.interfaces import RESTMethodPublishedEvent
@@ -132,3 +134,23 @@ class RESTNamespace(view):
         if name:
             return lookupREST(self.context, self.request, name)
         return self.context
+
+
+class AbsoluteURL(BrowserView):
+
+    def __init__(self, context, request):
+        self.context = context
+        self.request = request
+        self._parent_url = getMultiAdapter(
+            (context.__parent__, request), IAbsoluteURL)
+
+    def __str__(self):
+        pattern = '%s/++rest++%s'
+        if IRESTComponent.providedBy(self.context.__parent__):
+            pattern = '%s/%s'
+        return pattern % (self._parent_url(), self.context.__name__)
+
+    __call__ = __repr__ = __unicode__ = __str__
+
+    def breadcrumbs(self):
+        return self._parent_url.breadcrumbs()
