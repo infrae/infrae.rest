@@ -5,7 +5,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '1.1dev'
+version = '1.1'
 
 tests_require = [
     'infrae.wsgi [test]',
@@ -35,11 +35,14 @@ setup(name='infrae.rest',
       zip_safe=False,
       install_requires=[
         'five.grok',
+        'grokcore.view',
         'martian',
         'setuptools',
-        'simplejson',
+        'zope.browser',
         'zope.component',
+        'zope.event',
         'zope.interface',
+        'zope.location',
         'zope.publisher',
         'zope.traversing',
         ],
