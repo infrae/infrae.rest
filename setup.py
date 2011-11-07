@@ -5,7 +5,7 @@
 from setuptools import setup, find_packages
 import os
 
-version = '1.1'
+version = '1.2dev'
 
 tests_require = [
     'infrae.wsgi [test]',
@@ -14,7 +14,7 @@ tests_require = [
 
 setup(name='infrae.rest',
       version=version,
-      description="Define a REST API to access and manage Silva content",
+      description="Define a REST API to access and manage Zope 2 content",
       long_description=open("README.txt").read() + "\n" +
                        open(os.path.join("docs", "HISTORY.txt")).read(),
       classifiers=[

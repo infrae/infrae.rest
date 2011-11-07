@@ -73,3 +73,7 @@ only difference is that your class will be associated to a Grok
 template automatically.
 
 
+Repository
+==========
+
+Sources can be found in Mercurial at: https://hg.infrae.com/infrae.rest
