@@ -6,7 +6,7 @@ from five import grok
 from zope.component import getGlobalSiteManager, getMultiAdapter
 from zope.event import notify
 from zope.interface import Interface, providedBy
-from zope.interface.interfaces import IInterface
+from zope.interface.interfaces import ISpecification
 from zope.traversing.browser.interfaces import IAbsoluteURL
 from zope.traversing.namespace import view
 
@@ -21,11 +21,11 @@ import json
 ALLOWED_REST_METHODS = ('GET', 'POST', 'HEAD', 'PUT',)
 
 
-def queryRESTComponent(specs, args, name=u''):
+def queryRESTComponent(specs, args, name=u'', parent=None):
     """Query the ZCA for a REST component.
     """
     def specOf(obj):
-        if IInterface.providedBy(obj):
+        if ISpecification.providedBy(obj):
             return obj
         return providedBy(obj)
 
@@ -34,6 +34,9 @@ def queryRESTComponent(specs, args, name=u''):
     if factory is not None:
         result = factory(*args)
         if result is not None and IRESTComponent.providedBy(result):
+            # Set parenting information / for security
+            result.__name__ = name
+            result.__parent__ = parent
             return result
     return None
 
@@ -44,12 +47,10 @@ def lookupREST(context, request, name):
     view = queryRESTComponent(
         (Interface, context),
         (context, request),
-        name=name)
+        name=name,
+        parent=context)
     if view is None:
         raise NotFound(name)
-    # Set view parent/name for security
-    view.__name__ = name
-    view.__parent__ = context
     return view
 
 
@@ -87,13 +88,11 @@ class REST(object):
         view = queryRESTComponent(
             (self, self.context),
             (self.context, request),
-            name=name)
-        if view is not None:
-            # Set parenting information
-            view.__name__ = name
-            view.__parent__ = self
-            return view
-        raise NotFound(name)
+            name=name,
+            parent=self)
+        if view is None:
+            raise NotFound(name)
+        return view
 
     def json_response(self, result):
         """Encode a result as a JSON response.

@@ -2,9 +2,11 @@
 # See also LICENSE.txt
 # $Id$
 
+from infrae.rest.components import queryRESTComponent
 from infrae.rest.components import REST, RESTWithTemplate, lookupREST
 from infrae.rest.interfaces import IRESTMethodPublishedEvent
 
 __all__ = [
-    'REST', 'lookupREST', 'RESTWithTemplate', 'IRESTMethodPublishedEvent']
+    'REST', 'lookupREST', 'RESTWithTemplate', 'IRESTMethodPublishedEvent',
+    'queryRESTComponent']
 
