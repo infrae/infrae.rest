@@ -18,10 +18,11 @@ from infrae.rest.interfaces import MethodNotAllowed, IRESTComponent
 
 import json
 
+_marker = object()
 ALLOWED_REST_METHODS = ('GET', 'POST', 'HEAD', 'PUT',)
 
 
-def queryRESTComponent(specs, args, name=u'', parent=None):
+def queryRESTComponent(specs, args, name=u'', parent=None, id=_marker):
     """Query the ZCA for a REST component.
     """
     def specOf(obj):
@@ -35,7 +36,9 @@ def queryRESTComponent(specs, args, name=u'', parent=None):
         result = factory(*args)
         if result is not None and IRESTComponent.providedBy(result):
             # Set parenting information / for security
-            result.__name__ = name
+            if id is _marker:
+                id = name
+            result.__name__ = id
             result.__parent__ = parent
             return result
     return None
