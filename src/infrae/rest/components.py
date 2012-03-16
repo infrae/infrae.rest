@@ -3,10 +3,9 @@
 # $Id$
 
 from five import grok
-from zope.component import getGlobalSiteManager, getMultiAdapter
+from zope.component import getMultiAdapter
 from zope.event import notify
-from zope.interface import Interface, providedBy
-from zope.interface.interfaces import ISpecification
+from zope.interface import Interface
 from zope.traversing.browser.interfaces import IAbsoluteURL
 from zope.traversing.namespace import view
 
@@ -15,6 +14,7 @@ from zExceptions import NotFound
 
 from infrae.rest.interfaces import RESTMethodPublishedEvent
 from infrae.rest.interfaces import MethodNotAllowed, IRESTComponent
+from zeam import component
 
 import json
 
@@ -25,13 +25,7 @@ ALLOWED_REST_METHODS = ('GET', 'POST', 'HEAD', 'PUT',)
 def queryRESTComponent(specs, args, name=u'', parent=None, id=_marker):
     """Query the ZCA for a REST component.
     """
-    def specOf(obj):
-        if ISpecification.providedBy(obj):
-            return obj
-        return providedBy(obj)
-
-    sm = getGlobalSiteManager()
-    factory = sm.adapters.lookup(map(specOf, specs), IRESTComponent, name)
+    factory = component.queryComponent(specs, IRESTComponent, name)
     if factory is not None:
         result = factory(*args)
         if result is not None and IRESTComponent.providedBy(result):
@@ -48,7 +42,7 @@ def lookupREST(context, request, name):
     """Lookup a REST component called name on the given context / request.
     """
     view = queryRESTComponent(
-        (Interface, context),
+        (Interface, context,),
         (context, request),
         name=name,
         parent=context)
@@ -57,11 +51,13 @@ def lookupREST(context, request, name):
     return view
 
 
-class REST(object):
+class REST(component.Component):
     """A base REST component
     """
     grok.baseclass()
     grok.implements(IRESTComponent)
+    grok.provides(IRESTComponent)
+    grok.adapts(Interface, None)
 
     def __init__(self, context, request):
         self.context = context
@@ -105,6 +101,7 @@ class REST(object):
 
 
 class RESTWithTemplate(REST):
+    grok.baseclass()
     template = None
 
     def default_namespace(self):

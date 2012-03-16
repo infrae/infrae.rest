@@ -4,6 +4,7 @@
    xmlns:grok="http://namespaces.zope.org/grok">
 
   <include package="five.grok" />
+  <include package="zeam.component" />
 
   <!-- we register a ++rest++ traversal namespace -->
   <adapter
