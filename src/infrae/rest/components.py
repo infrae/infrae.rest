@@ -14,7 +14,7 @@ from zExceptions import NotFound
 
 from infrae.rest.interfaces import RESTMethodPublishedEvent
 from infrae.rest.interfaces import MethodNotAllowed, IRESTComponent
-from zeam import component
+from zeam.component import Component, getComponent
 
 import json
 
@@ -25,7 +25,7 @@ ALLOWED_REST_METHODS = ('GET', 'POST', 'HEAD', 'PUT',)
 def queryRESTComponent(specs, args, name=u'', parent=None, id=_marker):
     """Query the ZCA for a REST component.
     """
-    factory = component.queryComponent(specs, IRESTComponent, name)
+    factory = getComponent(specs, IRESTComponent, name, default=None)
     if factory is not None:
         result = factory(*args)
         if result is not None and IRESTComponent.providedBy(result):
@@ -51,7 +51,7 @@ def lookupREST(context, request, name):
     return view
 
 
-class REST(component.Component):
+class REST(Component):
     """A base REST component
     """
     grok.baseclass()
