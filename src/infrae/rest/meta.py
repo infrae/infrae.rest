@@ -17,11 +17,18 @@ class RESTSecurityGrokker(martian.ClassGrokker):
     """Grok REST views.
     """
     martian.component(REST)
+    martian.priority(100)
     martian.directive(grok.require, name='permission')
 
     def execute(self, factory, permission, config, **kw):
         """Register the REST component as a view on the IREST layer.
         """
+        # Set name. The priority of the grokker must be higher than 0
+        # to be call before the component is registered by
+        # zeam.component.
+        if not grok.name.bind().get(factory):
+            grok.name.set(factory, factory.__name__.lower())
+
         if permission is None:
             permission = 'zope.Public'
 
