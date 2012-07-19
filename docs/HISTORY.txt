@@ -1,6 +1,11 @@
 Changes
 =======
 
+1.1.1 (unreleased)
+------------------
+
+* remove shiftNameToApplication
+
 1.1 (2011-11-07)
 ----------------
 

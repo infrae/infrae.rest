@@ -130,7 +130,6 @@ class RESTNamespace(view):
     """
 
     def traverse(self, name, ignored):
-        self.request.shiftNameToApplication()
         if name:
             return lookupREST(self.context, self.request, name)
         return self.context
