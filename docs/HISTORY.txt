@@ -1,10 +1,10 @@
 Changes
 =======
 
-1.1.1 (unreleased)
+1.1.1 (2012-07-25)
 ------------------
 
-* remove shiftNameToApplication
+* remove shiftNameToApplication, it's a broken feature in zope 2.13
 
 1.1 (2011-11-07)
 ----------------
