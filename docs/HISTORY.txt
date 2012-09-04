@@ -1,10 +1,15 @@
 Changes
 =======
 
-1.2 (unreleased)
+1.2 (2012-09-04)
 ----------------
 
-* ...
+* Change registry for handlers from ``zope.component`` to
+  ``zeam.component``. This simplify the code base and brings more
+  flexibility. Expose ``queryRESTComponent`` function.
+
+* Remove usage of Zope 2 ``shiftNameToApplication``, as this is buggy
+  in recent Zope 2 releases.
 
 1.1 (2011-11-07)
 ----------------

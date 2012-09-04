@@ -37,6 +37,9 @@ You just have to grok your package to make it available.
   ``grok.context`` to configure your REST API. They work exactly like
   on a ``grok.View``.
 
+- If you need, you can manually query a REST component with the help
+  of ``infrae.rest.queryRESTComponent``.
+
 
 Nesting REST component
 ----------------------
