@@ -40,7 +40,6 @@
 
     >>> print http('HEAD /folder/++rest++testjson HTTP/1.0')
     HTTP/1.0 204 No Content
-    Content-Length: 0
     <BLANKLINE>
     <BLANKLINE>
 
