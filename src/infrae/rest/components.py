@@ -3,7 +3,7 @@
 # See also LICENSE.txt
 
 from five import grok
-from zope.component import getMultiAdapter
+from zope.component import getMultiAdapter, queryAdapter
 from zope.event import notify
 from zope.interface import Interface
 from zope.traversing.browser.interfaces import IAbsoluteURL
@@ -103,6 +103,17 @@ class REST(Component):
 class RESTWithTemplate(REST):
     grok.baseclass()
     template = None
+
+    def __init__(self, context, request):
+        super(RESTWithTemplate, self).__init__(context, request)
+        static_name = getattr(self, '__static_name__', None)
+        if static_name is not None:
+            self.static = queryAdapter(
+                request, Interface, name=static_name)
+            if self.static is not None:
+                self.static.__parent__ = context
+        else:
+            self.static = None
 
     def default_namespace(self):
         return {'rest': self,

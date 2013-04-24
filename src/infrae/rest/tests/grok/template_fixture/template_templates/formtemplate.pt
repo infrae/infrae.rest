@@ -1,0 +1,5 @@
+<form>
+   <h1 tal:content="rest/value">Label</h1>
+   <link rel="stylesheet" type="text/css" href="#"
+         tal:attributes="href rest/static/style.css" />
+</form>

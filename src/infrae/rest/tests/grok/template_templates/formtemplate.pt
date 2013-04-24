@@ -1,3 +1,0 @@
-<form>
-   <h1 tal:content="rest/value">Label</h1>
-</form>

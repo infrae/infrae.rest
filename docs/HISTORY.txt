@@ -4,7 +4,9 @@ Changes
 1.3 (unreleased)
 ----------------
 
-* ...
+* Add support for ``static`` on a ``RESTWithTemplate`` component.
+
+* Update tests.
 
 1.2 (2012-09-04)
 ----------------
