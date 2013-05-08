@@ -6,10 +6,10 @@ import unittest
 import doctest
 
 import infrae.rest
-from infrae.wsgi.testing import BrowserLayer, suite_from_package, http
+from infrae.wsgi.testing import ZopeBrowserLayer, suite_from_package, http
 
 
-class RestLayer(BrowserLayer):
+class RestLayer(ZopeBrowserLayer):
     default_users = {
         'manager': ['Manager'],
         }
