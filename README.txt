@@ -79,4 +79,4 @@ template automatically.
 Repository
 ==========
 
-Sources can be found in Mercurial at: https://hg.infrae.com/infrae.rest
+Sources can be found in Git at: https://github.com/infrae/infrae.rest
